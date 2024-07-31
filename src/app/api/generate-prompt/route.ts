@@ -3,11 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
     const { role, requirements } = await req.json();
 
-    if (!role || !requirements) {
-        return NextResponse.json({ message: 'Role and requirements are required' }, { status: 400 });
+    if (!requirements) {
+        return NextResponse.json({ message: 'Requirements are required' }, { status: 400 });
     }
 
-    const prompt = `역할: ${role}\n요구사항: ${requirements}`;
+    const prompt = `Role: ${role}\nRequirements: ${requirements}\nGenerate a improved prompt for the provided role and requirements in English.`;
 
     try {
         const response = await fetch(`${process.env.OPENAI_API_CHAT_ENDPOINT}`, {
@@ -17,14 +17,19 @@ export async function POST(req: NextRequest) {
             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: "gpt-4o-mini",
+                // model: "gpt-3.5-turbo",
                 messages: [
+                    {
+                        role: "system",
+                        content: "You are a prompt engineering assistant. Answer the prompt only."
+                    },
                     {
                         role: "user",
                         content: prompt
                     }
                 ],
-                max_tokens: 100,
+                max_tokens: 16384,
             })
         });
 

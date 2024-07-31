@@ -200,6 +200,20 @@ package.json 파일에 PM2와 관련된 스크립트를 추가합니다.
  "pm2": "pm2-runtime ecosystem.config.js"
 ```
 
+next.config.mjs 파일에서 정적 사이트 빌드 해제를 위하여 output 설정 주석 처리합니다.
+
+```typescript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    reactStrictMode: true,
+    // output: 'export',       // 정적 사이트 빌드
+    distDir: 'out',
+    trailingSlash: true,    // 정적 사이트 빌드 시 새로고침(refresh) 404 에러 방지
+}
+
+export default nextConfig;
+```
+
 ### 5. Docker 이미지 빌드 및 실행
 
 ```sh

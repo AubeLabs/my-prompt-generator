@@ -11,6 +11,7 @@ export default function Head() {
             <meta httpEquiv="Pragma" content="no-cache" />
             <meta httpEquiv="Expires" content="0" />
             <meta httpEquiv="Surrogate-Control" content="no-store" />
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1552768407784696" crossOrigin="anonymous"></script>
         </>
     );
 }

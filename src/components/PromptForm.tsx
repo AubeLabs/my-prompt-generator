@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getRoleFromLocalStorage } from "../utils/localStorage";
+import { FiCopy } from 'react-icons/fi';
 
 const PromptForm = () => {
   const [requirements, setRequirements] = useState<string>("");
@@ -54,7 +55,7 @@ const PromptForm = () => {
       setGeneratedPrompt(data.prompt); */
 
       // const prompt = `Role: ${role}\nRequirements: ${requirements}\nGenerate improved prompts for the provided role and requirements in English and original language of the requirements.`;
-      const prompt = `Role: ${role}\nRequirements: ${requirements}\nGenerate improved prompts for the provided role and requirements in English.`;
+      const prompt = `Role: ${role}\nRequirements: ${requirements}\nGenerate a improved prompt for the provided role and requirements in English.`;
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_OPENAI_API_CHAT_ENDPOINT}`, {
         method: 'POST',
@@ -67,11 +68,15 @@ const PromptForm = () => {
             // model: "gpt-3.5-turbo",
             messages: [
                 {
+                    role: "system",
+                    content: "You are a prompt engineering assistant. Answer the prompt only."
+                },
+                {
                     role: "user",
                     content: prompt
                 }
             ],
-            max_tokens: 10000,
+            max_tokens: 16384,
         })
       });
 
@@ -112,6 +117,16 @@ const PromptForm = () => {
     setByteCount(new TextEncoder().encode(value).length);
   };
 
+  const handleCopyToClipboard = () => {
+    if (generatedPrompt) {
+      navigator.clipboard.writeText(generatedPrompt).then(() => {
+        alert('프롬프트를 클립보드에 복사하였습니다.');
+      }, (err) => {
+        alert('클립보드 복사에 실패했습니다.');
+      });
+    }
+  };
+
   return (
     <div className="p-4">
       <p className="mb-2">
@@ -145,11 +160,19 @@ const PromptForm = () => {
       {generatedPrompt && (
         <div className="mt-4">
           <h3 className="text-lg font-bold mb-2">생성된 프롬프트</h3>
-          <textarea
-            value={generatedPrompt}
-            className="w-full h-full border rounded resize-y select-auto"
-            readOnly
-          />
+          <div
+            className="w-full h-auto border rounded p-2 bg-white relative"
+            style={{ whiteSpace: 'pre-wrap', userSelect: 'text' }}
+          >
+            <span>{generatedPrompt}</span>
+            <button
+              onClick={handleCopyToClipboard}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              title="Copy to clipboard"
+            >
+              <FiCopy />
+            </button>
+          </div>
         </div>
       )}
     </div>

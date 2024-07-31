@@ -2,7 +2,8 @@
 // import Head from "next/head";
 import Head from "./head";
 import "./globals.css";
-import Header from '../components/Header';
+import Header from '@/components/Header';
+import Footer from "@/components/Footer";
 
 // export const metadata: Metadata = {
 //   title: "ChatGPT 프롬프트 생성기",
@@ -19,6 +20,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="container mx-auto py-4">
             {children}
           </div>
+          <Footer />
         </div>
       </body>
     </html>
